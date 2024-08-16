@@ -1,0 +1,135 @@
+﻿<Window x:Class="DSP4.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DSP4"
+        xmlns:vm="clr-namespace:DSP4.ViewModel"
+        xmlns:sf="clr-namespace:Syncfusion.UI.Xaml.Charts;assembly=Syncfusion.SfChart.WPF"
+        mc:Ignorable="d"
+        Title="DigitalSignalProcessing" Width="800" Height="730">
+    <Window.DataContext>
+        <vm:MainWindowViewModel/>
+    </Window.DataContext>
+
+    <Grid 
+        Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <sf:SfChart 
+            Header="Signals"
+            Grid.Column="0"
+            Grid.Row="0"
+            Grid.ColumnSpan="2">
+            <sf:SfChart.PrimaryAxis>
+                <sf:CategoryAxis Header="X" />
+            </sf:SfChart.PrimaryAxis>
+            <sf:SfChart.SecondaryAxis>
+                <sf:NumericalAxis Header="Y"/>
+            </sf:SfChart.SecondaryAxis>
+            <sf:SplineSeries
+                Name="SignalValues" 
+                ItemsSource="{Binding Signals}" 
+                XBindingPath="X"
+                YBindingPath="Y"
+                Interior="#5FFF0000"/>
+            <sf:SplineSeries
+                Name="RestoredSignals"
+                ItemsSource="{Binding SmoothedSignals}"
+                XBindingPath="X"
+                YBindingPath="Y"
+                Interior="#5F00FF00"/>
+        </sf:SfChart>
+        <sf:SfChart
+            Header="AmplitudeSpectrums"
+            Grid.Column="0"
+            Grid.Row="1">
+            <sf:SfChart.PrimaryAxis>
+                <sf:CategoryAxis Header="X" />
+            </sf:SfChart.PrimaryAxis>
+            <sf:SfChart.SecondaryAxis>
+                <sf:NumericalAxis Header="Y"/>
+            </sf:SfChart.SecondaryAxis>
+            <sf:StepLineSeries
+                Name="AmplitudeSpectrums" 
+                ItemsSource="{Binding AmplitudeSpectrums}" 
+                XBindingPath="X"
+                YBindingPath="Y"
+                Interior="#FF0000"/>
+        </sf:SfChart>
+        <sf:SfChart
+            Header="PhaseSpectrums"
+            Grid.Column="1"
+            Grid.Row="1">
+            <sf:SfChart.PrimaryAxis>
+                <sf:CategoryAxis Header="X" />
+            </sf:SfChart.PrimaryAxis>
+            <sf:SfChart.SecondaryAxis>
+                <sf:NumericalAxis Header="Y"/>
+            </sf:SfChart.SecondaryAxis>
+            <sf:StepLineSeries
+                Name="PhaseSpectrums" 
+                ItemsSource="{Binding PhaseSpectrums}" 
+                XBindingPath="X"
+                YBindingPath="Y"
+                Interior="#0000FF"/>
+        </sf:SfChart>
+        <Grid 
+            Grid.Column="0"
+            Grid.Row="2"
+            Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label 
+                Content="HarmonicsCount"
+                Grid.Column="0"
+                Grid.Row="0"/>
+            <Slider 
+                Value="{Binding HarmonicsCount, Mode=TwoWay}"
+                Minimum="1" 
+                Maximum="20" 
+                SmallChange="1" 
+                AutoToolTipPlacement="TopLeft" 
+                Grid.Column="1" 
+                Grid.Row="0"/>
+            <Label
+                Content="Smoothing Type"
+                Grid.Column="0"
+                Grid.Row="1"/>
+            <StackPanel 
+                Orientation="Horizontal"
+                Grid.Column="1"
+                Grid.Row="1">
+                <RadioButton
+                    x:Name="parabolicRadioButton"
+                    Content="Parabolic"
+                    Margin="10"
+                    IsChecked="True"
+                    Checked="SignalTypeChanged"/>
+                <RadioButton
+                    x:Name="slidingRadioButton"
+                    Content="Sliding"
+                    Margin="10"
+                    Checked="SignalTypeChanged"/>
+                <RadioButton
+                    x:Name="medianRadioButton"
+                    Content="Median"
+                    Margin="10"
+                    Checked="SignalTypeChanged"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
